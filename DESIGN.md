@@ -211,3 +211,45 @@ Build marketplace UX only after you have:
 - **Government partnerships.** 6-12 month relationship cycle. Year 2.
 - **Public leaderboards.** Marketing, not revenue. Do it when customers care.
 - **Community-contributed tasks.** Nobody contributes to tools with zero users. Users first.
+
+## Go-to-Market Funnel
+
+Three hooks, three audiences, one funnel:
+
+```
+DEVELOPERS / AGENT BUILDERS
+  "Run irie check on your agent output. One command. Open source."
+  → installs irie
+  → sees score, realizes context matters
+  → wants expert context → enters funnel
+
+DOMAIN EXPERTS
+  "Earn side income for knowledge you already have."
+  → Dennis + Marcelle are the first experts (free sessions to learn)
+  → Expand to 10-20 friends with deep domain expertise
+  → Expert network grows by invitation, quality over quantity
+
+RESEARCHERS / EVAL BUILDERS
+  "Reproduce our results. Run your agent against SWE-Lancer through irie."
+  → adopts irie for their own evals
+  → publishes results → awareness → more developers
+
+         ┌─────────────┐
+         │  irie check  │ ← free, open source, zero friction
+         │  (self-serve)│
+         └──────┬───────┘
+                │ score is low, needs expert context
+                ▼
+         ┌─────────────┐
+         │   expert     │ ← Dennis + Marcelle initially, then friends
+         │  refinement  │
+         └──────┬───────┘
+                │ expert adds context, score improves
+                ▼
+         ┌─────────────┐
+         │    susu      │ ← marketplace when demand proves out
+         │ (marketplace)│
+         └─────────────┘
+```
+
+Conference talks (AIE 2026) are the top of this funnel. Each talk has a concrete CTA for its audience.

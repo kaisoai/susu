@@ -155,3 +155,43 @@ Own the intelligence. Use OSS for infrastructure.
 | Bradley-Terry reputation | Designed |
 | Payment integration | Not designed |
 | MCP server integration | Architecture ready |
+
+## Bootstrap Strategy
+
+Ideas for getting the first transactions flowing without building full marketplace UX.
+
+### 1. Dogfood with real work
+
+Dennis posts real Upbound tasks. Marcelle is the expert who refines them. Agents execute. irie scores. Two-person marketplace with real work flowing through the tools. This is how Stripe started — the founders were the first merchants. Proves the lifecycle works before opening to anyone else.
+
+### 2. "Verify your agent" — free PLG
+
+Agent builders want to know if their agents are good. Offer free irie checks on agent output — they get a quality score, we get data on what agents produce and where they fail. Free tier feeds paid tier. HubSpot grader model.
+
+### 3. Bounty competitions
+
+Post 5-10 tasks with real prize money ($500-$2K each). "Fix this real bug. Best proposal wins. irie scores, expert reviews." Kaggle proved competitions bootstrap supply. The competition IS the marketplace in miniature.
+
+### 4. Expert-as-a-service (sells today)
+
+Companies building agents need evaluation but don't have domain experts. Offer expert context packs — a domain expert spends 30 minutes refining task context via anansi interview. The agent builder gets better eval results. The expert gets paid. No marketplace UX needed — just anansi + irie + an expert + an invoice.
+
+### 5. Partner with Inspect AI / UK AISI
+
+They have the eval framework and the government mandate. We have the context layer and the expert economics. irie + anansi make Inspect evals more accurate. Joint paper, joint workshop, mutual referrals.
+
+### 6. SWE-Lancer leaderboard
+
+Run all 265 manager tasks, publish a public leaderboard of which agents/models score highest with irie's staged evaluation. Agent builders love leaderboards. Free marketing that demonstrates the product.
+
+### 7. Context correction consulting
+
+Skip the marketplace entirely. Sell to companies using AI agents: "Your agents are making decisions on incomplete context. We interview your domain experts, gather context, and improve your agent evaluation accuracy." Consulting engagement that becomes a product. Direct revenue from day one.
+
+### 8. Open source community tasks
+
+Let the community submit tasks + rubrics to a public repo. Anyone can run irie against them. Community-contributed verification for community-built agents. Builds adoption and a task corpus.
+
+### Sharpest edges for immediate revenue
+
+**Expert-as-a-service (#4)** and **consulting (#7)** don't need marketplace UX. They need anansi + irie + a domain expert + an invoice. These can generate revenue while the marketplace is being built.

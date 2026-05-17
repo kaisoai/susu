@@ -253,3 +253,26 @@ RESEARCHERS / EVAL BUILDERS
 ```
 
 Conference talks (AIE 2026) are the top of this funnel. Each talk has a concrete CTA for its audience.
+
+## Open Question: Where Refinement Meets Task Decomposition
+
+Marcelle — this is for you.
+
+Your "spec of specs" idea and our task refinement flow might be the same thing at different scales. Think about it:
+
+**Small task:** Expert refines a single task. Adds context, constraints, gotchas. anansi interviews, irie scores. Straightforward.
+
+**Complex task:** Expert looks at a large task and says "this is actually three sub-tasks with dependencies." The refinement ISN'T adding context to one task — it's decomposing into multiple tasks, each with their own context and acceptance criteria. The expert's contribution is the decomposition structure itself.
+
+Questions to think through:
+
+- Is decomposition just a special case of refinement? (Expert adds context that says "split this into A, B, C with these interfaces")
+- Or does decomposition need its own primitive? (A task that produces sub-tasks, each tracked independently)
+- How does scoring work for decomposed tasks? Score each sub-task independently? Score the integration? Both?
+- Process rewards research (Lightman 2023) says step-level verification beats outcome-only by 5.8% on hard tasks — does that mean decomposition + per-step scoring is always better for complex work?
+- Who pays for decomposition? The requester? Is decomposition itself a task that experts bid on?
+- Does the rubric.toml format extend to decomposition? A rubric with sub-rubrics? Or is that overloading it?
+
+Your "spec of specs" might be: a rubric.toml that describes how to DECOMPOSE a task, not how to SCORE one. The expert's highest-leverage contribution for complex work isn't context correction on the solution — it's defining the structure of the problem.
+
+No answers needed now. Just want this on your radar for Tuesday.

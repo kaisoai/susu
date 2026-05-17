@@ -1,202 +1,157 @@
 # susu — Design
 
-The verified task marketplace where context corrections trade hands.
+The marketplace where context corrections trade hands.
 
-## One sentence
-
-Requesters post tasks, experts refine them, executors do the work, and the scorer is the payment gate.
-
-## How it works
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         susu                                 │
-│                                                              │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐               │
-│  │Requester │    │  Expert  │    │ Executor │               │
-│  │          │    │          │    │          │               │
-│  │ Posts    │    │ Refines  │    │ Does the │               │
-│  │ task     │    │ task     │    │ work     │               │
-│  └────┬─────┘    └────┬─────┘    └────┬─────┘               │
-│       │               │               │                     │
-│       ▼               ▼               ▼                     │
-│  ┌─────────────────────────────────────────┐                │
-│  │           Task (accumulated context)     │                │
-│  │                                          │                │
-│  │  context/        rubric.toml             │                │
-│  │  ├─ spec.md      [rubric]                │                │
-│  │  ├─ issue.md     name = "..."            │                │
-│  │  ├─ expert/      [[criteria]]            │                │
-│  │  │  └─ notes.md  name = "auth"           │                │
-│  │  └─ github/      weight = 1.0            │                │
-│  │     └─ thread.md added_by = "expert:dan" │                │
-│  └──────────────────────┬──────────────────┘                │
-│                          │                                   │
-│                          ▼                                   │
-│  ┌──────────────────────────────────────────┐               │
-│  │              irie check                   │               │
-│  │                                           │               │
-│  │  Staged eval:                             │               │
-│  │  1. Opus understands (context + rubric)   │               │
-│  │  2. Panel scores (haiku + sonnet)         │               │
-│  │  3. Opus decides                          │               │
-│  │                                           │               │
-│  │  Or tournament:                           │               │
-│  │  irie compare proposal_a proposal_b ...   │               │
-│  └──────────────────────┬──────────────────┘                │
-│                          │                                   │
-│                          ▼                                   │
-│                    ┌───────────┐                             │
-│                    │  Score    │                             │
-│                    │  passes? │                             │
-│                    └─────┬─────┘                             │
-│                     yes/ \no                                 │
-│                     /     \                                  │
-│              ┌─────▼┐   ┌─▼──────┐                          │
-│              │ PAY  │   │ NO PAY │                          │
-│              └──────┘   └────────┘                          │
-└─────────────────────────────────────────────────────────────┘
+                              kaiso.ai
+                    ┌──────────────────────────┐
+                    │          susu             │
+                    │   task lifecycle engine   │
+                    │                          │
+                    │  ┌────────────────────┐  │
+                    │  │  credential broker │  │
+                    │  │  (scoped tokens)   │  │
+                    │  └────────┬───────────┘  │
+                    │           │               │
+                    └───────────┼───────────────┘
+                                │
+              ┌─────────────────┼──────────────────┐
+              │                 │                   │
+   ┌──────────▼───────┐ ┌──────▼──────┐  ┌────────▼────────┐
+   │    requester      │ │   expert    │  │    executor     │
+   │                   │ │             │  │                 │
+   │ posts task +      │ │ refines via │  │ does the work   │
+   │ initial context   │ │ interview   │  │ (human or AI)   │
+   └──────────┬────────┘ └──────┬──────┘  └────────┬────────┘
+              │                 │                   │
+              ▼                 ▼                   ▼
+   ┌──────────────────────────────────────────────────────┐
+   │              task (filesystem)                         │
+   │                                                       │
+   │  context/                     rubric.toml             │
+   │  ├─ manifest.json             (generated or expert)   │
+   │  │  (provenance + RBAC)                               │
+   │  ├─ issue.md (automated)      submissions/            │
+   │  ├─ comments.md (automated)   └─ output.py            │
+   │  ├─ interview_001.md (expert)                         │
+   │  └─ spec.md (requester)       results/                │
+   │                               └─ (Inspect AI logs)    │
+   └───────────────────────┬──────────────────────────────┘
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+      ┌───────▼──┐  ┌─────▼─────┐  ┌──▼─────────┐
+      │  anansi  │  │   irie    │  │  Inspect AI │
+      │          │  │           │  │             │
+      │ gather   │  │ rubric    │  │ eval        │
+      │ interview│  │ gen +     │  │ execution   │
+      │          │  │ staged    │  │ engine      │
+      │ context  │  │ eval      │  │             │
+      │ files +  │  │           │  │ reproducible│
+      │ manifest │  │ scorer    │  │ logs        │
+      └──────────┘  │ design    │  └─────────────┘
+                    └───────────┘
 ```
 
-## The task lifecycle
+## Task Lifecycle
 
 ```
-Phase 1: POST
-  Requester creates task
-  → description, specs, budget, deadline
-  → initial context/ directory
-  → anansi auto-gathers related context (GitHub, docs, etc.)
+PHASE 1: POST
+  requester creates task → description, specs, budget
+  anansi gather → automated context from GitHub, Slack, docs (via MCP)
+  manifest.json tracks provenance + visibility scopes
 
-Phase 2: REFINE
-  Expert refines the task (the highest-leverage phase)
-  → adds constraints, gotchas, domain knowledge
-  → anansi interviews the expert, translates to:
-     - rubric.toml criteria (persists across task type)
-     - context files (one-time, this task)
-  → expert never sees TOML — they "refine the task"
-  → prevents wrong-path execution before it starts
+PHASE 2: REFINE  (highest leverage — prevents wrong-path execution)
+  anansi interview → agent reads existing context, asks expert targeted questions
+  expert talks naturally → anansi structures into context files + rubric input
+  RBAC: interviewer sees scoped context (summaries for sensitive entries)
 
-Phase 3: EXECUTE
-  Executor (human or AI agent) does the work
-  → sees enriched context: spec + auto-gathered + expert refinements
-  → can request clarification (triggers more expert context)
-  → produces output artifact
+PHASE 3: EXECUTE
+  executor (human or AI agent) sees enriched context
+  produces output artifact in submissions/
 
-Phase 4: VERIFY
-  irie scores the output
-  → staged eval against accumulated context + rubric
-  → score determines payment
-  → expert can provide additional context during verification
-     ("the test is wrong not the code" → rubric adjustment)
+PHASE 4: VERIFY
+  irie staged eval:
+    opus understands problem (all visible context + rubric)
+    panel scores (haiku + sonnet parallel)
+    opus decides
+  or irie compare (pairwise tournament if multiple submissions)
+  results stored as Inspect AI logs (reproducible)
 
-Phase 5: SETTLE
-  Score passes threshold → executor gets paid
-  Expert gets paid for refinement + any rubric contributions
-  Rubric criteria with provenance → royalties on future use
+PHASE 5: SETTLE
+  score passes threshold → executor paid
+  expert paid for refinement
+  reputation updated (Bradley-Terry, per task type)
 ```
 
-## What gets paid
+## What Gets Paid
 
-### Requester pays
-- Task bounty (to executor on pass)
-- Verification fee (to irie infrastructure)
-- Expert refinement fee (to expert)
-
-### Executor earns
-- Task bounty (on verification pass)
-- Reputation (Bradley-Terry, per task type)
-
-### Expert earns
-Two streams:
-
-**Per-task refinement** — paid for each task they refine. Direct context that helps this specific task. Flat fee or hourly.
-
-**Rubric royalties** — paid every time a criterion they contributed is used in future evaluations. The expert who adds "check for rate limiting in v3 API calls" to the api-migration rubric earns a fraction every time that criterion is evaluated. This compounds.
-
-```
-Expert contribution         Payment model        Compounds?
-─────────────────          ──────────────        ──────────
-"Use OAuth2 not API keys"  Per-task fee          No
-  → added to context/
-
-"Check for rate limiting"  Royalty per use        Yes
-  → added to rubric.toml
-  → used in 500 future evals
-```
+| Role | What they provide | Payment |
+|---|---|---|
+| Requester | Task + initial context + budget | Pays bounty + fees |
+| Expert | Context corrections via interview | Per-task refinement fee |
+| Executor | Solution artifact | Bounty on verification pass |
 
 ## Reputation: Bradley-Terry
 
-Same methodology as LM Arena ($1.7B). Pairwise comparison resists gaming better than star ratings.
+Same methodology as LM Arena ($1.7B valuation). Each verified task is a "battle." Pairwise results accumulate into Elo-like ratings per task type. Transparent, auditable, resists gaming better than star ratings.
 
-- Each verified task completion is a "battle"
-- Executors and experts accumulate Elo-like ratings
-- Ratings are **per task type**, not aggregate (a great frontend dev might be mediocre at infra)
-- Statistical confidence intervals — new participants have wide intervals that narrow with history
-- Transparent and auditable — all evaluations use irie, all results are reproducible
+## Security
 
-## Intermediate representation
-
-Users see "tasks." Under the hood:
+RBAC at the manifest level. Each context entry has visibility scopes. MCP servers enforce scopes at the source. susu acts as credential broker — no party sees another party's tokens. See [SECURITY.md](SECURITY.md).
 
 ```
-task-12345/
-├── context/                    ← accumulated context
-│   ├── spec.md                 ← requester provided
-│   ├── github/                 ← anansi gathered
-│   │   ├── issue.md
-│   │   └── comments.md
-│   └── expert/                 ← expert refinements
-│       └── refinement-001.md
-├── rubric.toml                 ← what "done" means
-│   ├── criteria with provenance
-│   └── versioned, auditable
-├── submissions/                ← executor outputs
-│   ├── agent-output-001/
-│   └── agent-output-002/
-└── results/                    ← irie evaluation logs
-    └── (Inspect AI native format)
+visibility: ["requester", "executor"]     → expert can't see
+summary_only_for: ["expert", "irie"]      → sees summary, not content
 ```
 
-Context is tagged by source (automated/expert/requester). irie weights by source trust. The rubric tracks who added each criterion and when.
-
-## The tools
+## The Tools
 
 ```
-anansi                    irie                      susu
-─────────                 ────                      ────
-Gathers context           Generates rubrics         Prices the exchange
-  - crawls GitHub         Runs staged eval          Manages task lifecycle
-  - interviews experts    Pairwise tournament       Tracks reputation
-  - auto-discovers docs   Produces Inspect logs     Handles payment
-                                                    Routes expert attention
-
-Format interfaces only — no code imports between tools
-  context/ (markdown)  →  rubric.toml  →  Inspect logs (JSON)
+anansi                    irie                    susu
+──────                    ────                    ────
+gather <uri>              check <artifact>        task lifecycle
+interview                 compare <artifacts>     credential broker
+                                                  reputation (B-T)
+                                                  payment/settlement
+manifest.json ──────────→ rubric.toml ──────────→ Inspect logs
+(provenance + RBAC)       (what to check)         (reproducible results)
 ```
 
-## What exists vs what's needed
+No code imports between tools. Format-level interfaces only.
+
+## What We Own vs OSS
+
+| Component | Own | OSS |
+|---|---|---|
+| Crawling intelligence (what to fetch) | ✓ | |
+| Expert interview agent | ✓ | |
+| Manifest + provenance format | ✓ | |
+| Rubric generation intelligence | ✓ | |
+| Scorer design (0-5 per criterion) | ✓ | |
+| Bradley-Terry reputation | ✓ | |
+| Task lifecycle engine | ✓ | |
+| Source connectors | | MCP servers |
+| Scoring execution | | Inspect AI |
+| LLM API | | Anthropic SDK |
+| Payment rails | | Stripe / MPP |
+
+Own the intelligence. Use OSS for infrastructure.
+
+## What Exists
 
 | Component | Status |
 |---|---|
-| anansi GitHub gathering | Working (221 lines) |
-| anansi expert interviews | Not built |
+| anansi gather (GitHub issues, repos) | Working (592 lines) |
+| anansi interview (expert Q&A agent) | Working |
 | irie check (staged eval) | Working (980 lines) |
-| irie compare (tournament) | Working |
-| susu task posting | Not built |
-| susu payment integration | Not built |
-| susu reputation system | Not built |
-| susu expert matching | Not built |
-| Rubric provenance tracking | Designed, not built |
-| Rubric royalty system | Designed, not built |
-
-## Key design decisions
-
-**Task refinement is the user abstraction.** Nobody interacts with TOML or context directories. Experts "refine tasks." The system translates.
-
-**Context before execution is highest leverage.** Expert refinement in Phase 2 prevents wrong-path work entirely. Expert review in Phase 4 explains failures. Both are valuable; Phase 2 is more valuable.
-
-**Rubric contributions compound.** Direct corrections fix one task. Rubric criteria fix a category. Price accordingly — royalties, not flat fees.
-
-**All evaluation is reproducible.** Every irie evaluation produces an Inspect AI log. Any party can re-run `inspect eval task.py` to verify the score. Trust = transparency.
-
-**Loose coupling.** anansi, irie, and susu are separate repos with format-level interfaces. Any tool can be swapped. Any verifier can replace irie. Any context gatherer can replace anansi.
+| irie compare (pairwise tournament) | Working |
+| Manifest provenance | Working |
+| RBAC visibility fields | Designed |
+| susu task lifecycle | Designed |
+| susu credential broker | Designed |
+| Bradley-Terry reputation | Designed |
+| Payment integration | Not designed |
+| MCP server integration | Architecture ready |

@@ -26,6 +26,10 @@ Experts provide two kinds of context:
 
 Bradley-Terry ranking (same methodology as LM Arena, $1.7B). Each verified task is a "battle." Pairwise comparison resists gaming better than star ratings. Reputation accrues per task type, not aggregate.
 
+## License
+
+Proprietary. Design docs shared for reference. See [LICENSE](LICENSE).
+
 ## Status
 
 Not yet built. irie (verification) and anansi (context) come first. The marketplace emerges from demand.

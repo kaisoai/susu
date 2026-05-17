@@ -158,40 +158,50 @@ Own the intelligence. Use OSS for infrastructure.
 
 ## Bootstrap Strategy
 
-Ideas for getting the first transactions flowing without building full marketplace UX.
+Sequential. One bet at a time. Team of 2, one part-time.
 
-### 1. Dogfood with real work
+### Phase 0: Dogfood (now)
 
-Dennis posts real Upbound tasks. Marcelle is the expert who refines them. Agents execute. irie scores. Two-person marketplace with real work flowing through the tools. This is how Stripe started — the founders were the first merchants. Proves the lifecycle works before opening to anyone else.
+Dennis posts real work from Upbound. Marcelle is the expert. Agents execute. irie scores. Two-person marketplace running on real tasks through the actual tools. Proves the lifecycle before opening to anyone.
 
-### 2. "Verify your agent" — free PLG
+**Goal:** 10 real tasks scored end-to-end. Identify every friction point.
 
-Agent builders want to know if their agents are good. Offer free irie checks on agent output — they get a quality score, we get data on what agents produce and where they fail. Free tier feeds paid tier. HubSpot grader model.
+### Phase 1: Sell expert context correction (month 1-3)
 
-### 3. Bounty competitions
+One offering: "Your AI agents are making decisions on incomplete context. We interview your domain experts via anansi, improve your evaluation context, and show you the accuracy difference."
 
-Post 5-10 tasks with real prize money ($500-$2K each). "Fix this real bug. Best proposal wins. irie scores, expert reviews." Kaggle proved competitions bootstrap supply. The competition IS the marketplace in miniature.
+Sell to companies already using AI agents for real work. Price: $500-$2K per engagement (30-60 min expert interview + irie evaluation before/after). No marketplace UX needed — just anansi + irie + an expert + an invoice.
 
-### 4. Expert-as-a-service (sells today)
+**Goal:** 5 paying customers. $5-10K revenue. Proof that context correction has economic value.
 
-Companies building agents need evaluation but don't have domain experts. Offer expert context packs — a domain expert spends 30 minutes refining task context via anansi interview. The agent builder gets better eval results. The expert gets paid. No marketplace UX needed — just anansi + irie + an expert + an invoice.
+**Why this first:** It validates the core thesis (context correction is worth paying for) with cash, not metrics. Every engagement produces a case study. And it's sellable today with tools that exist.
 
-### 5. Partner with Inspect AI / UK AISI
+### Phase 2: Free irie check with expert upsell (month 3-6)
 
-They have the eval framework and the government mandate. We have the context layer and the expert economics. irie + anansi make Inspect evals more accurate. Joint paper, joint workshop, mutual referrals.
+Open `irie check` as a free tool. Anyone can verify agent output. The score shows where the output is weak. The upsell: "Want an expert to improve your context and re-score? $X."
 
-### 6. SWE-Lancer leaderboard
+```
+Free: irie check solution.py "fix the bug" → 2.8/5.0
+Paid: expert adds context via anansi interview → re-check → 4.2/5.0
+      "Here's what the expert caught that your agent missed."
+```
 
-Run all 265 manager tasks, publish a public leaderboard of which agents/models score highest with irie's staged evaluation. Agent builders love leaderboards. Free marketing that demonstrates the product.
+The free check is lead gen. The expert session is revenue. The delta between scores is the sales pitch.
 
-### 7. Context correction consulting
+**Goal:** 100 free checks/month. 10% conversion to expert sessions.
 
-Skip the marketplace entirely. Sell to companies using AI agents: "Your agents are making decisions on incomplete context. We interview your domain experts, gather context, and improve your agent evaluation accuracy." Consulting engagement that becomes a product. Direct revenue from day one.
+### Phase 3: Marketplace (month 6+)
 
-### 8. Open source community tasks
+Only after Phase 1 and 2 prove demand. Requesters post tasks, experts bid to refine them, agents execute, irie scores, payment flows. Bradley-Terry reputation from Phase 1-2 history seeds the marketplace with credible expert profiles.
 
-Let the community submit tasks + rubrics to a public repo. Anyone can run irie against them. Community-contributed verification for community-built agents. Builds adoption and a task corpus.
+Build marketplace UX only after you have:
+- Experts with track records (from Phase 1)
+- Requesters who've paid for context correction (from Phase 1-2)
+- A conversion funnel that works (from Phase 2)
 
-### Sharpest edges for immediate revenue
+### What we're NOT doing (yet)
 
-**Expert-as-a-service (#4)** and **consulting (#7)** don't need marketplace UX. They need anansi + irie + a domain expert + an invoice. These can generate revenue while the marketplace is being built.
+- **Competitions/bounties.** Cash furnace without VC money. Defer.
+- **Government partnerships.** 6-12 month relationship cycle. Year 2.
+- **Public leaderboards.** Marketing, not revenue. Do it when customers care.
+- **Community-contributed tasks.** Nobody contributes to tools with zero users. Users first.

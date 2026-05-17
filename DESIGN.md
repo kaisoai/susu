@@ -174,7 +174,13 @@ Dennis posts real work from Upbound. Marcelle is the expert. Agents execute. iri
 
 The two motions feed each other: self-service users discover they need expert context (their scores are low). Expert engagement customers discover their teams want the self-service tool.
 
-**Goal:** 200+ irie installs. 5 paid expert engagements. $5-10K revenue. Case studies from engagements. Proof that context correction has economic value AND that developers adopt the free tool.
+**Self-service discovery for agents:** We want agent builders and developers to discover irie organically — like Moltbook for agent verification. Developer has an agent that produces output, runs `irie check`, gets a score and a rubric they didn't have to write. The friction should be near-zero: pip install, set API key, one command. The discovery loop is: agent produces work → developer isn't sure if it's good → irie check → structured score with explanation → developer trusts (or doesn't) the agent.
+
+**Experts are us initially:** Dennis and Marcelle are the first experts. We offer free refinements — N free anansi interviews / context corrections for early users. Not because it's a business model. Because we need to learn: what questions do experts actually ask? What context actually moves the needle? What does the expert UX feel like? Every free session teaches us something about the product. We can't design expert tools without being experts first.
+
+**Expand the expert network slowly:** Start with our highly technical friends — people we trust, who have deep domain expertise, who will give honest feedback on the tools and the experience. Not a public marketplace. A curated group of 10-20 experts we know personally. This is how the best marketplaces start: handpicked supply, quality over quantity, learn what works before opening the floodgates.
+
+**Goal:** 200+ irie installs. 20+ free expert sessions (us). 5 friends onboarded as experts. Enough data to know what expert tools need to look like before building marketplace UX.
 
 ### Phase 2: Free irie check with expert upsell (month 3-6)
 

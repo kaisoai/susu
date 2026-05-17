@@ -166,15 +166,15 @@ Dennis posts real work from Upbound. Marcelle is the expert. Agents execute. iri
 
 **Goal:** 10 real tasks scored end-to-end. Identify every friction point.
 
-### Phase 1: Sell expert context correction (month 1-3)
+### Phase 1: Two parallel motions (month 1-3)
 
-One offering: "Your AI agents are making decisions on incomplete context. We interview your domain experts via anansi, improve your evaluation context, and show you the accuracy difference."
+**Self-service (bottom-up):** Ship irie as a pip-installable tool. Developer runs `irie check` on their code, gets a score + explanation. Free, open source, no account needed. Adoption metric: installs + GitHub stars. This builds the user base that feeds everything downstream.
 
-Sell to companies already using AI agents for real work. Price: $500-$2K per engagement (30-60 min expert interview + irie evaluation before/after). No marketplace UX needed — just anansi + irie + an expert + an invoice.
+**Expert engagements (top-down):** Sell context correction to companies using AI agents. "We interview your domain experts via anansi, improve your evaluation context, and show you the accuracy difference." $500-$2K per engagement. No marketplace UX needed — just anansi + irie + an expert + an invoice.
 
-**Goal:** 5 paying customers. $5-10K revenue. Proof that context correction has economic value.
+The two motions feed each other: self-service users discover they need expert context (their scores are low). Expert engagement customers discover their teams want the self-service tool.
 
-**Why this first:** It validates the core thesis (context correction is worth paying for) with cash, not metrics. Every engagement produces a case study. And it's sellable today with tools that exist.
+**Goal:** 200+ irie installs. 5 paid expert engagements. $5-10K revenue. Case studies from engagements. Proof that context correction has economic value AND that developers adopt the free tool.
 
 ### Phase 2: Free irie check with expert upsell (month 3-6)
 
